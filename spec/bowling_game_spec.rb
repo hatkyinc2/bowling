@@ -152,5 +152,80 @@ describe BowlingGame do
         expect(bg.score).to eq(14)
       end
     end
+
+    context 'Special end game samples' do
+      it 'Limits to 10 frames' do
+        attempts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        bg = BowlingGame.new
+        attempts.each do |no_of_pins|
+          bg.roll(no_of_pins)
+        end
+        expect do
+          bg.roll(0)
+        end.to raise_error(ArgumentError)
+      end
+
+      it '10 frames with split' do
+        attempts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 0]
+        bg = BowlingGame.new
+        attempts.each do |no_of_pins|
+          bg.roll(no_of_pins)
+        end
+        expect(bg.score).to eq(10)
+
+        attempts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 1]
+        bg = BowlingGame.new
+        attempts.each do |no_of_pins|
+          bg.roll(no_of_pins)
+        end
+        expect(bg.score).to eq(11)
+      end
+
+      it '10 frames with strike' do
+        attempts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0]
+        bg = BowlingGame.new
+        attempts.each do |no_of_pins|
+          bg.roll(no_of_pins)
+        end
+        expect(bg.score).to eq(10)
+
+        attempts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 1]
+        bg = BowlingGame.new
+        attempts.each do |no_of_pins|
+          bg.roll(no_of_pins)
+        end
+        expect(bg.score).to eq(11)
+
+        attempts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 0]
+        bg = BowlingGame.new
+        attempts.each do |no_of_pins|
+          bg.roll(no_of_pins)
+        end
+        expect(bg.score).to eq(20)
+
+        attempts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 10]
+        bg = BowlingGame.new
+        attempts.each do |no_of_pins|
+          bg.roll(no_of_pins)
+        end
+        expect(bg.score).to eq(20)
+
+        attempts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10]
+        bg = BowlingGame.new
+        attempts.each do |no_of_pins|
+          bg.roll(no_of_pins)
+        end
+        expect(bg.score).to eq(30)
+
+        attempts = [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+        bg = BowlingGame.new
+        attempts.each do |no_of_pins|
+          bg.roll(no_of_pins)
+        end
+        expect(bg.score).to eq(300)
+      end
+
+      # TODO: Capture all end of game conditions - out of current scope
+    end
   end
 end

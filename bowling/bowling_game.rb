@@ -15,7 +15,8 @@ class BowlingGame
   # no_of_pins is expected to be an integer between 0-10
   RANGE_ERR = 'no_of_pins out of expected range (0-10), was '
   def roll(no_of_pins)
-    raise ArgumentError, RANGE_ERR + no_of_pins.to_s if no_of_pins.negative? || (no_of_pins > 10)
+    validate_pin_input(no_of_pins)
+    check_end_game # Not fully test covered yet
 
     # Record valid input
     @attempts.push(no_of_pins)
@@ -29,12 +30,12 @@ class BowlingGame
 
     identify_special_scores(current_frame)
 
-    @frames.push([]) if frame_score(current_frame) == 10 || current_frame.count == 2
+    @frames.push([]) if frame_score(current_frame) == 10 || current_frame.count == 2 || current_frame_id > 10
   end
 
   def score
     total_score = 0
-    0.upto(@frames.count - 1) do |frame_id|
+    0.upto([@frames.count - 1, 9].min) do |frame_id|
       frame = @frames[frame_id]
       total_score += frame_score(frame)
     end
@@ -77,5 +78,24 @@ class BowlingGame
     else # current_frame.count == 1
       @last_frame_strike = true
     end
+  end
+
+  def check_end_game
+    game_finished if @frames.count == 11 + extra_attempts
+  end
+
+  def extra_attempts
+    return 2 if @prev_frame_strike_id
+    return 1 if @prev_frame_strike_id || @last_frame_split || @last_frame_strike
+
+    0
+  end
+
+  def game_finished
+    raise ArgumentError, 'Game finished'
+  end
+
+  def validate_pin_input(no_of_pins)
+    raise ArgumentError, RANGE_ERR + no_of_pins.to_s if no_of_pins.negative? || (no_of_pins > 10)
   end
 end
