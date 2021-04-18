@@ -7,6 +7,9 @@ class BowlingGame
     @frames = [[]]
 
     @last_frame_split = false
+
+    @prev_frame_strike_id = nil
+    @last_frame_strike = false
   end
 
   # no_of_pins is expected to be an integer between 0-10
@@ -22,9 +25,10 @@ class BowlingGame
     current_frame.push(no_of_pins)
 
     handle_split(current_frame_id, no_of_pins)
+    handle_strike(current_frame_id, no_of_pins)
 
-    # Process frame
-    @last_frame_split = true if frame_score(current_frame) == 10
+    identify_special_scores(current_frame)
+
     @frames.push([]) if frame_score(current_frame) == 10 || current_frame.count == 2
   end
 
@@ -49,5 +53,29 @@ class BowlingGame
     split_frame_id = current_frame_id - 1
     @frames[split_frame_id].push(no_of_pins)
     @last_frame_split = false
+  end
+
+  def handle_strike(current_frame_id, no_of_pins)
+    if @prev_frame_strike_id
+      @frames[@prev_frame_strike_id].push(no_of_pins)
+      @prev_frame_strike_id = nil
+    end
+
+    return unless @last_frame_strike
+
+    frame_id = current_frame_id - 1
+    @frames[frame_id].push(no_of_pins)
+    @prev_frame_strike_id = frame_id
+    @last_frame_strike = false
+  end
+
+  def identify_special_scores(current_frame)
+    return unless frame_score(current_frame) == 10
+
+    if current_frame.count == 2
+      @last_frame_split = true
+    else # current_frame.count == 1
+      @last_frame_strike = true
+    end
   end
 end

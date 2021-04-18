@@ -75,6 +75,82 @@ describe BowlingGame do
         bg.roll(5)
         expect(bg.score).to eq(20)
       end
+      it 'Calculates the stike rule' do
+        bg = BowlingGame.new
+        bg.roll(10)
+        bg.roll(2)
+        bg.roll(2)
+        expect(bg.score).to eq(18)
+
+        bg = BowlingGame.new
+        bg.roll(10)
+        bg.roll(5)
+        bg.roll(5)
+        expect(bg.score).to eq(30)
+
+        bg = BowlingGame.new
+        bg.roll(10)
+        bg.roll(9)
+        bg.roll(9)
+        expect(bg.score).to eq(46)
+      end
+    end
+    context 'Full game samples' do
+      it 'Returns the right score' do
+        attempts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        bg = BowlingGame.new
+        attempts.each do |no_of_pins|
+          bg.roll(no_of_pins)
+        end
+        expect(bg.score).to eq(0)
+
+        attempts = [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        bg = BowlingGame.new
+        attempts.each do |no_of_pins|
+          bg.roll(no_of_pins)
+        end
+        expect(bg.score).to eq(1)
+
+        # Split mid game
+        attempts = [0, 0, 0, 0, 2, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        bg = BowlingGame.new
+        attempts.each do |no_of_pins|
+          bg.roll(no_of_pins)
+        end
+        expect(bg.score).to eq(10)
+
+        # Split mid game
+        attempts = [0, 0, 0, 0, 2, 8, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        bg = BowlingGame.new
+        attempts.each do |no_of_pins|
+          bg.roll(no_of_pins)
+        end
+        expect(bg.score).to eq(12)
+
+        # Strick mid game
+        attempts = [0, 0, 0, 0, 10, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        bg = BowlingGame.new
+        attempts.each do |no_of_pins|
+          bg.roll(no_of_pins)
+        end
+        expect(bg.score).to eq(12)
+
+        # Strick mid game
+        attempts = [0, 0, 0, 0, 10, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        bg = BowlingGame.new
+        attempts.each do |no_of_pins|
+          bg.roll(no_of_pins)
+        end
+        expect(bg.score).to eq(12)
+
+        # Strick mid game
+        attempts = [0, 0, 0, 0, 10, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        bg = BowlingGame.new
+        attempts.each do |no_of_pins|
+          bg.roll(no_of_pins)
+        end
+        expect(bg.score).to eq(14)
+      end
     end
   end
 end
