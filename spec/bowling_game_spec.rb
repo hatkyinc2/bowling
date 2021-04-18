@@ -3,9 +3,8 @@
 require_relative '../bowling/bowling_game'
 
 describe BowlingGame do
-  bg = BowlingGame.new
-
   describe 'roll' do
+    bg = BowlingGame.new
     context 'Given a negative number of rolls' do
       it 'returns an exception' do
         expect do
@@ -27,6 +26,22 @@ describe BowlingGame do
             bg.roll(i)
           end
         end.not_to raise_error
+      end
+    end
+  end
+
+  describe 'score' do
+    context 'Given two rolls' do
+      it 'Return a score joining them' do
+        bg = BowlingGame.new
+        bg.roll(4)
+        bg.roll(4)
+        expect(bg.score).to eq(8)
+
+        bg = BowlingGame.new
+        bg.roll(2)
+        bg.roll(5)
+        expect(bg.score).to eq(7)
       end
     end
   end
